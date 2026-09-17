@@ -1798,16 +1798,17 @@ class LSTMClassifier(nn.Module):
     def __init__(self, input_size=3, hidden_size=64, num_classes=5):
         super().__init__()
         self.hidden_size = hidden_size
-        # Use nn.LSTMCell to process the sequence one time step at a time
-        self.lstm_cell = nn.LSTMCell(input_size, hidden_size)
+        # Combine all 4 gates [i, f, g, o] into a single Linear operation (just like how nn.LSTMCell works)
+        self.weight_ih = nn.Linear(input_size, 4 * hidden_size)
+        self.weight_hh = nn.Linear(hidden_size, 4 * hidden_size)
         self.fc = nn.Linear(hidden_size, num_classes)
 
         # Initialize Forget Gate Bias to 2.0 to keep the CEC highway open
         with torch.no_grad():
             # In PyTorch's nn.LSTMCell, biases are concatenated into 4 gates: [i, f, g, o]
             # The slice [hidden_size : 2 * hidden_size] corresponds to the Forget Gate
-            self.lstm_cell.bias_ih[hidden_size : 2 * hidden_size].fill_(2.0)
-            self.lstm_cell.bias_hh[hidden_size : 2 * hidden_size].fill_(2.0)
+            self.weight_ih.bias[hidden_size : 2 * hidden_size].fill_(2.0)
+            self.weight_hh.bias[hidden_size : 2 * hidden_size].fill_(2.0)
 
     def forward(self, x):
         batch_size, seq_len, _ = x.shape
@@ -1819,8 +1820,17 @@ class LSTMClassifier(nn.Module):
         cell_states = []
         
         for t in range(seq_len):
-            # Compute (h_t, c_t) at time step t
-            h, c = self.lstm_cell(x[:, t, :], (h, c))
+            # Compute the 4 gates: input, forget, cell candidate, and output
+            gates = self.weight_ih(x[:, t, :]) + self.weight_hh(h)
+            i_gate, f_gate, g_gate, o_gate = gates.chunk(4, dim=1)
+
+            i = torch.sigmoid(i_gate)
+            f = torch.sigmoid(f_gate)
+            g = torch.tanh(g_gate)
+            o = torch.sigmoid(o_gate)
+
+            c = f * c + i * g
+            h = o * torch.tanh(c)
             
             # Retain gradients for intermediate non-leaf activations during backprop
             h.retain_grad()
@@ -1896,8 +1906,8 @@ plt.show()
     Gradient Norm Comparison (First Step t=0 vs Last Step t=128):
     ---------------------------------------------------------------------------
     Vanilla RNN (h_t)      : t=128: 0.562963 | t=0: 0.000000e+00
-    LSTM (Cell State c_t)  : t=128: 0.000000 | t=0: 1.463658e+00
-    LSTM (Hidden State h_t): t=128: 0.531088 | t=0: 4.395734e-01
+    LSTM (Cell State c_t)  : t=128: 0.118933 | t=0: 1.131533e-01
+    LSTM (Hidden State h_t): t=128: 0.505658 | t=0: 2.962673e-02
     ---------------------------------------------------------------------------
     
 
