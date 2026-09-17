@@ -601,7 +601,7 @@ print(f"Theoretical initial expectation: -ln(1/5) = ln(5) ≈ {np.log(5):.4f}")
 ```
 
     Loss function: CrossEntropyLoss()
-    Initial loss on the first batch: 1.6159
+    Initial loss on the first batch: 1.6154
     Theoretical initial expectation: -ln(1/5) = ln(5) ≈ 1.6094
     
 
@@ -774,6 +774,114 @@ history = train_model(model, train_loader)
 
     Epoch 01/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
 
+
+
+    Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [01/10] (5.2s) | Train Loss: 1.5990 | Train Acc: 25.37% | Val Loss: 1.5573 | Val Acc: 33.59%
+    
+
+
+    Epoch 02/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 02/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [02/10] (5.1s) | Train Loss: 1.4780 | Train Acc: 36.13% | Val Loss: 1.4227 | Val Acc: 40.54%
+    
+
+
+    Epoch 03/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [03/10] (5.7s) | Train Loss: 1.4203 | Train Acc: 40.51% | Val Loss: 1.3684 | Val Acc: 43.57%
+    
+
+
+    Epoch 04/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 04/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [04/10] (5.9s) | Train Loss: 1.3730 | Train Acc: 42.92% | Val Loss: 1.6110 | Val Acc: 30.48%
+    
+
+
+    Epoch 05/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 05/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [05/10] (8.2s) | Train Loss: 1.3048 | Train Acc: 46.24% | Val Loss: 1.2950 | Val Acc: 46.12%
+    
+
+
+    Epoch 06/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [06/10] (6.3s) | Train Loss: 1.2353 | Train Acc: 50.69% | Val Loss: 1.1463 | Val Acc: 54.95%
+    
+
+
+    Epoch 07/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [07/10] (5.8s) | Train Loss: 1.3559 | Train Acc: 44.30% | Val Loss: 1.6169 | Val Acc: 21.33%
+    
+
+
+    Epoch 08/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [08/10] (5.7s) | Train Loss: 1.5909 | Train Acc: 24.74% | Val Loss: 1.5378 | Val Acc: 32.63%
+    
+
+
+    Epoch 09/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [09/10] (5.7s) | Train Loss: 1.5752 | Train Acc: 27.91% | Val Loss: 1.4560 | Val Acc: 38.06%
+    
+
+
+    Epoch 10/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
+
+
+
+    Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
+
+
+    Epoch [10/10] (5.7s) | Train Loss: 1.4374 | Train Acc: 39.36% | Val Loss: 1.3375 | Val Acc: 44.22%
+    -----------------------------------------------------------------
+    Training complete!
+    
 
 ### **Plotting training graph**
 
@@ -955,6 +1063,14 @@ print(f"- sample_x_max shape     : {sample_x_max.shape}")
 print(f"- sample_y_max shape     : {sample_y_max.shape}")
 ```
 
+    Longest sequence sample:
+    - Training set index     : 70642
+    - Category               : cat (label: 1)
+    - Actual sequence length : 129 steps (no zero padding)
+    - sample_x_max shape     : torch.Size([1, 129, 3])
+    - sample_y_max shape     : torch.Size([1])
+    
+
 
 ```python
 sim_model = RNNClassifierVanishing().to(device)
@@ -983,7 +1099,7 @@ fig, axes = plt.subplots(1, 2, figsize=(16, 5))
 # Linear Scale Plot
 axes[0].plot(time_steps, grad_norms, color='crimson', linewidth=2, label='Vanilla RNN ($h_t$ grad)')
 axes[0].set_title('Gradient Norm w.r.t Hidden State $h_t$ (Linear Scale)', fontsize=13, fontweight='bold')
-axes[0].set_xlabel('Time Step $t$ (0 $\\rightarrow$ 99)', fontsize=11)
+axes[0].set_xlabel(f'Time Step $t$ (0 $\\rightarrow$ {seq_len - 1})', fontsize=11)
 axes[0].set_ylabel('$\\|\\partial \\mathcal{L} / \\partial h_t\\|_2$', fontsize=11)
 axes[0].grid(True, linestyle='--', alpha=0.6)
 axes[0].legend(fontsize=11)
@@ -992,7 +1108,7 @@ axes[0].legend(fontsize=11)
 axes[1].plot(time_steps, grad_norms, color='crimson', linewidth=2, label='Vanilla RNN ($h_t$ grad)')
 axes[1].set_yscale('log')
 axes[1].set_title('Gradient Norm w.r.t Hidden State $h_t$ (Log Scale)', fontsize=13, fontweight='bold')
-axes[1].set_xlabel('Time Step $t$ (0 $\\rightarrow$ 99)', fontsize=11)
+axes[1].set_xlabel(f'Time Step $t$ (0 $\\rightarrow$ {seq_len - 1})', fontsize=11)
 axes[1].set_ylabel('$\\|\\partial \\mathcal{L} / \\partial h_t\\|_2$ (log scale)', fontsize=11)
 axes[1].grid(True, which='both', linestyle='--', alpha=0.5)
 axes[1].legend(fontsize=11)
@@ -1002,9 +1118,9 @@ plt.show()
 ```
 
     Gradient Norm Statistics across time steps:
-    - Last step (t=129) : 0.011236
+    - Last step (t=128) : 0.562963
     - First step (t=0)  : 0.000000e+00
-    - Decay factor      : ~11,235,716,753x reduction
+    - Decay factor      : ~562,962,591,648x reduction
     
 
 
@@ -1015,9 +1131,9 @@ plt.show()
 
 **Evidence of Vanishing Gradients**
 * **Observations from the Graphs:**
-  * **Exponential Decay:** The log-scale plot shows a steep linear drop: gradient norm falls from **$0.011235$** at $t=129$ to under **$10^{-13}$** at $t \approx 79$, and completely underflows to **$0.0$** by $t \approx 52$—representing an extreme decay of over **$11.2\text{ billion times}$** ($\approx 1.12 \times 10^{10}\times$).
-  * **Temporal Amnesia:** On the linear scale, gradients are virtually zero for nearly $90\%$ of the sequence ($t=0 \rightarrow 120$); the network learns almost exclusively from the last $\approx 10$ steps.
-* **Why it occurred:** Due to repeated Jacobian multiplications across 130 time steps where $|\tanh'| \le 1$ and $\|W_{hh}\| < 1$, gradients decay exponentially $(\gamma \|W_{hh}\|)^{T-t} \to 0$, leaving early strokes unable to update the model.
+  * **Exponential Decay:** The log-scale plot demonstrates a relentless, linear-in-log drop: the gradient norm falls from **$0.562963$** at the final step ($t=128$) down to under **$10^{-12}$** by $t \approx 80$, drops below **$10^{-20}$** by $t \approx 45$, and completely underflows to **$0.0$** (machine precision limit) by **$t \approx 41$**. This represents a staggering decay factor of over **$562.9\text{ billion times}$** ($\approx 5.63 \times 10^{11}\times$).
+  * **Temporal Amnesia:** On the linear scale, the gradient magnitude is imperceptible and flatlined at zero for over **$93\%$** of the sequence ($t=0 \rightarrow 120$). The network assigns credit and learns almost exclusively from the last $\approx 8$ strokes ($t=121 \rightarrow 128$), completely blind to the foundational strokes at the beginning of the drawing.
+* **Why it occurred:** Due to repeated Jacobian multiplications across 129 genuine stroke steps where $|\tanh'| \le 1$ and $\|W_{hh}\| < 1$, gradients attenuate exponentially $(\gamma \|W_{hh}\|)^{T-t} \to 0$. Without padding zeros masking the dynamics, the empirical test confirms that vanilla RNNs suffer catastrophic vanishing gradient over real sequential data of length $> 40$.
 
 ### **Solution to Gradient Exploding & Vanishing**
 
@@ -1060,7 +1176,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [01/10] (14.2s) | Train Loss: 1.6134 | Train Acc: 19.23% | Val Loss: 1.6104 | Val Acc: 18.95%
+    Epoch [01/10] (5.8s) | Train Loss: 1.6134 | Train Acc: 19.23% | Val Loss: 1.6104 | Val Acc: 18.95%
     
 
 
@@ -1071,7 +1187,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 02/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [02/10] (13.9s) | Train Loss: 1.6099 | Train Acc: 19.00% | Val Loss: 1.6081 | Val Acc: 19.22%
+    Epoch [02/10] (5.8s) | Train Loss: 1.6099 | Train Acc: 19.00% | Val Loss: 1.6081 | Val Acc: 19.22%
     
 
 
@@ -1082,7 +1198,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [03/10] (14.4s) | Train Loss: 1.6081 | Train Acc: 20.39% | Val Loss: 1.6068 | Val Acc: 21.24%
+    Epoch [03/10] (5.6s) | Train Loss: 1.6081 | Train Acc: 20.39% | Val Loss: 1.6068 | Val Acc: 21.24%
     
 
 
@@ -1093,7 +1209,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 04/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [04/10] (13.5s) | Train Loss: 1.6069 | Train Acc: 21.91% | Val Loss: 1.6058 | Val Acc: 22.61%
+    Epoch [04/10] (5.7s) | Train Loss: 1.6069 | Train Acc: 21.91% | Val Loss: 1.6058 | Val Acc: 22.61%
     
 
 
@@ -1104,7 +1220,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 05/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [05/10] (14.3s) | Train Loss: 1.6060 | Train Acc: 22.87% | Val Loss: 1.6049 | Val Acc: 23.79%
+    Epoch [05/10] (5.6s) | Train Loss: 1.6060 | Train Acc: 22.87% | Val Loss: 1.6049 | Val Acc: 23.79%
     
 
 
@@ -1115,7 +1231,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [06/10] (14.1s) | Train Loss: 1.6051 | Train Acc: 23.95% | Val Loss: 1.6042 | Val Acc: 24.38%
+    Epoch [06/10] (5.7s) | Train Loss: 1.6051 | Train Acc: 23.95% | Val Loss: 1.6042 | Val Acc: 24.38%
     
 
 
@@ -1126,7 +1242,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [07/10] (14.1s) | Train Loss: 1.6044 | Train Acc: 24.56% | Val Loss: 1.6035 | Val Acc: 24.82%
+    Epoch [07/10] (5.6s) | Train Loss: 1.6044 | Train Acc: 24.56% | Val Loss: 1.6035 | Val Acc: 24.82%
     
 
 
@@ -1137,7 +1253,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [08/10] (13.9s) | Train Loss: 1.6036 | Train Acc: 24.92% | Val Loss: 1.6028 | Val Acc: 25.07%
+    Epoch [08/10] (5.7s) | Train Loss: 1.6036 | Train Acc: 24.92% | Val Loss: 1.6028 | Val Acc: 25.07%
     
 
 
@@ -1148,7 +1264,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [09/10] (8.9s) | Train Loss: 1.6029 | Train Acc: 25.23% | Val Loss: 1.6021 | Val Acc: 25.51%
+    Epoch [09/10] (5.6s) | Train Loss: 1.6029 | Train Acc: 25.23% | Val Loss: 1.6021 | Val Acc: 25.51%
     
 
 
@@ -1159,7 +1275,7 @@ low_lr_history = train_model(model_low_lr, train_loader)
     Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [10/10] (6.3s) | Train Loss: 1.6021 | Train Acc: 25.46% | Val Loss: 1.6014 | Val Acc: 25.92%
+    Epoch [10/10] (5.9s) | Train Loss: 1.6021 | Train Acc: 25.46% | Val Loss: 1.6014 | Val Acc: 25.92%
     -----------------------------------------------------------------
     Training complete!
     
@@ -1218,7 +1334,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [01/10] (6.2s) | Train Loss: 1.6063 | Train Acc: 22.80% | Val Loss: 1.6014 | Val Acc: 25.81%
+    Epoch [01/10] (5.8s) | Train Loss: 1.6063 | Train Acc: 22.80% | Val Loss: 1.6014 | Val Acc: 25.81%
     
 
 
@@ -1240,7 +1356,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [03/10] (5.8s) | Train Loss: 1.4671 | Train Acc: 36.63% | Val Loss: 1.4471 | Val Acc: 37.94%
+    Epoch [03/10] (5.7s) | Train Loss: 1.4671 | Train Acc: 36.63% | Val Loss: 1.4471 | Val Acc: 37.94%
     
 
 
@@ -1273,7 +1389,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [06/10] (6.3s) | Train Loss: 1.3557 | Train Acc: 43.74% | Val Loss: 1.3127 | Val Acc: 45.71%
+    Epoch [06/10] (5.7s) | Train Loss: 1.3557 | Train Acc: 43.74% | Val Loss: 1.3127 | Val Acc: 45.71%
     
 
 
@@ -1284,7 +1400,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [07/10] (6.0s) | Train Loss: 1.3219 | Train Acc: 45.35% | Val Loss: 1.2024 | Val Acc: 51.26%
+    Epoch [07/10] (5.8s) | Train Loss: 1.3219 | Train Acc: 45.35% | Val Loss: 1.2024 | Val Acc: 51.26%
     
 
 
@@ -1295,7 +1411,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [08/10] (6.1s) | Train Loss: 1.2372 | Train Acc: 49.22% | Val Loss: 1.3038 | Val Acc: 47.06%
+    Epoch [08/10] (5.8s) | Train Loss: 1.2372 | Train Acc: 49.22% | Val Loss: 1.3038 | Val Acc: 47.06%
     
 
 
@@ -1306,7 +1422,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [09/10] (6.1s) | Train Loss: 1.2664 | Train Acc: 48.02% | Val Loss: 1.4523 | Val Acc: 37.34%
+    Epoch [09/10] (5.7s) | Train Loss: 1.2664 | Train Acc: 48.02% | Val Loss: 1.4523 | Val Acc: 37.34%
     
 
 
@@ -1317,7 +1433,7 @@ low_lr_explode_history = train_model(model_low_lr_explode, train_loader)
     Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [10/10] (6.2s) | Train Loss: 1.4209 | Train Acc: 40.21% | Val Loss: 1.3625 | Val Acc: 42.71%
+    Epoch [10/10] (5.7s) | Train Loss: 1.4209 | Train Acc: 40.21% | Val Loss: 1.3625 | Val Acc: 42.71%
     -----------------------------------------------------------------
     Training complete!
     
@@ -1505,7 +1621,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [01/10] (6.2s) | Train Loss: 1.5990 | Train Acc: 25.37% | Val Loss: 1.5573 | Val Acc: 33.59%
+    Epoch [01/10] (5.6s) | Train Loss: 1.5990 | Train Acc: 25.37% | Val Loss: 1.5573 | Val Acc: 33.59%
     
 
 
@@ -1516,7 +1632,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 02/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [02/10] (6.9s) | Train Loss: 1.4780 | Train Acc: 36.13% | Val Loss: 1.4227 | Val Acc: 40.54%
+    Epoch [02/10] (5.7s) | Train Loss: 1.4780 | Train Acc: 36.13% | Val Loss: 1.4227 | Val Acc: 40.54%
     
 
 
@@ -1527,7 +1643,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [03/10] (6.7s) | Train Loss: 1.4202 | Train Acc: 40.52% | Val Loss: 1.3740 | Val Acc: 43.14%
+    Epoch [03/10] (5.8s) | Train Loss: 1.4202 | Train Acc: 40.52% | Val Loss: 1.3740 | Val Acc: 43.14%
     
 
 
@@ -1538,7 +1654,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 04/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [04/10] (6.0s) | Train Loss: 1.3711 | Train Acc: 43.21% | Val Loss: 1.2881 | Val Acc: 45.71%
+    Epoch [04/10] (7.8s) | Train Loss: 1.3711 | Train Acc: 43.21% | Val Loss: 1.2881 | Val Acc: 45.71%
     
 
 
@@ -1549,7 +1665,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 05/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [05/10] (6.2s) | Train Loss: 1.2908 | Train Acc: 47.03% | Val Loss: 1.3002 | Val Acc: 47.72%
+    Epoch [05/10] (7.8s) | Train Loss: 1.2908 | Train Acc: 47.03% | Val Loss: 1.3002 | Val Acc: 47.72%
     
 
 
@@ -1560,7 +1676,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [06/10] (6.3s) | Train Loss: 1.2223 | Train Acc: 51.23% | Val Loss: 1.0844 | Val Acc: 57.66%
+    Epoch [06/10] (5.7s) | Train Loss: 1.2223 | Train Acc: 51.23% | Val Loss: 1.0844 | Val Acc: 57.66%
     
 
 
@@ -1571,7 +1687,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [07/10] (6.1s) | Train Loss: 1.1486 | Train Acc: 55.32% | Val Loss: 1.0442 | Val Acc: 59.79%
+    Epoch [07/10] (5.8s) | Train Loss: 1.1486 | Train Acc: 55.32% | Val Loss: 1.0442 | Val Acc: 59.79%
     
 
 
@@ -1582,7 +1698,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [08/10] (6.1s) | Train Loss: 1.0886 | Train Acc: 58.28% | Val Loss: 0.9787 | Val Acc: 63.78%
+    Epoch [08/10] (5.7s) | Train Loss: 1.0886 | Train Acc: 58.28% | Val Loss: 0.9787 | Val Acc: 63.78%
     
 
 
@@ -1593,7 +1709,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [09/10] (6.0s) | Train Loss: 1.0716 | Train Acc: 59.24% | Val Loss: 1.7538 | Val Acc: 34.42%
+    Epoch [09/10] (5.7s) | Train Loss: 1.0716 | Train Acc: 59.24% | Val Loss: 1.7538 | Val Acc: 34.42%
     
 
 
@@ -1604,7 +1720,7 @@ history_grad_clip = train_model_with_grad_clip(model_grad_clip, train_loader)
     Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [10/10] (6.4s) | Train Loss: 1.0493 | Train Acc: 60.54% | Val Loss: 0.9503 | Val Acc: 63.99%
+    Epoch [10/10] (5.7s) | Train Loss: 1.0493 | Train Acc: 60.54% | Val Loss: 0.9503 | Val Acc: 63.99%
     -----------------------------------------------------------------
     Training complete!
     
@@ -1739,11 +1855,11 @@ lstm_c_grad_norms = [
 
 # Summary statistics
 seq_len = sample_x_max.size(1)
-print("Gradient Norm Comparison (First Step t=0 vs Last Step t=129):")
+print(f"Gradient Norm Comparison (First Step t=0 vs Last Step t={seq_len-1}):")
 print("-" * 75)
-print(f"Vanilla RNN (h_t)      : t=129: {grad_norms[-1]:.6f} | t=0: {grad_norms[0]:.6e}")
-print(f"LSTM (Cell State c_t)  : t=129: {lstm_c_grad_norms[-1]:.6f} | t=0: {lstm_c_grad_norms[0]:.6e}")
-print(f"LSTM (Hidden State h_t): t=129: {lstm_h_grad_norms[-1]:.6f} | t=0: {lstm_h_grad_norms[0]:.6e}")
+print(f"Vanilla RNN (h_t)      : t={seq_len-1}: {grad_norms[-1]:.6f} | t=0: {grad_norms[0]:.6e}")
+print(f"LSTM (Cell State c_t)  : t={seq_len-1}: {lstm_c_grad_norms[-1]:.6f} | t=0: {lstm_c_grad_norms[0]:.6e}")
+print(f"LSTM (Hidden State h_t): t={seq_len-1}: {lstm_h_grad_norms[-1]:.6f} | t=0: {lstm_h_grad_norms[0]:.6e}")
 print("-" * 75)
 
 # Plot Gradient Vanishing Curves (Linear & Log Scale)
@@ -1777,11 +1893,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-    Gradient Norm Comparison (First Step t=0 vs Last Step t=129):
+    Gradient Norm Comparison (First Step t=0 vs Last Step t=128):
     ---------------------------------------------------------------------------
-    Vanilla RNN (h_t)      : t=129: 0.011236 | t=0: 0.000000e+00
-    LSTM (Cell State c_t)  : t=129: 0.000000 | t=0: 7.652155e-02
-    LSTM (Hidden State h_t): t=129: 0.011991 | t=0: 2.115283e-02
+    Vanilla RNN (h_t)      : t=128: 0.562963 | t=0: 0.000000e+00
+    LSTM (Cell State c_t)  : t=128: 0.000000 | t=0: 1.463658e+00
+    LSTM (Hidden State h_t): t=128: 0.531088 | t=0: 4.395734e-01
     ---------------------------------------------------------------------------
     
 
@@ -1881,7 +1997,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [01/10] (6.1s) | Train Loss: 1.5161 | Train Acc: 31.07% | Val Loss: 1.3169 | Val Acc: 44.74%
+    Epoch [01/10] (5.7s) | Train Loss: 1.5161 | Train Acc: 31.07% | Val Loss: 1.3169 | Val Acc: 44.74%
     
 
 
@@ -1892,7 +2008,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 02/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [02/10] (6.1s) | Train Loss: 1.2766 | Train Acc: 44.17% | Val Loss: 1.1972 | Val Acc: 47.41%
+    Epoch [02/10] (5.7s) | Train Loss: 1.2766 | Train Acc: 44.17% | Val Loss: 1.1972 | Val Acc: 47.41%
     
 
 
@@ -1903,7 +2019,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [03/10] (6.2s) | Train Loss: 1.1652 | Train Acc: 50.54% | Val Loss: 1.0807 | Val Acc: 57.50%
+    Epoch [03/10] (5.7s) | Train Loss: 1.1652 | Train Acc: 50.54% | Val Loss: 1.0807 | Val Acc: 57.50%
     
 
 
@@ -1914,7 +2030,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 04/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [04/10] (6.1s) | Train Loss: 1.0924 | Train Acc: 54.61% | Val Loss: 1.2032 | Val Acc: 48.07%
+    Epoch [04/10] (5.9s) | Train Loss: 1.0924 | Train Acc: 54.61% | Val Loss: 1.2032 | Val Acc: 48.07%
     
 
 
@@ -1925,7 +2041,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 05/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [05/10] (6.1s) | Train Loss: 1.0352 | Train Acc: 58.48% | Val Loss: 0.9890 | Val Acc: 60.78%
+    Epoch [05/10] (5.7s) | Train Loss: 1.0352 | Train Acc: 58.48% | Val Loss: 0.9890 | Val Acc: 60.78%
     
 
 
@@ -1936,7 +2052,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [06/10] (6.2s) | Train Loss: 0.9817 | Train Acc: 62.05% | Val Loss: 0.9059 | Val Acc: 65.66%
+    Epoch [06/10] (6.1s) | Train Loss: 0.9817 | Train Acc: 62.05% | Val Loss: 0.9059 | Val Acc: 65.66%
     
 
 
@@ -1947,7 +2063,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [07/10] (6.1s) | Train Loss: 0.9459 | Train Acc: 63.93% | Val Loss: 0.9250 | Val Acc: 63.29%
+    Epoch [07/10] (5.9s) | Train Loss: 0.9459 | Train Acc: 63.93% | Val Loss: 0.9250 | Val Acc: 63.29%
     
 
 
@@ -1958,7 +2074,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [08/10] (6.2s) | Train Loss: 0.9169 | Train Acc: 65.23% | Val Loss: 0.8962 | Val Acc: 66.06%
+    Epoch [08/10] (5.9s) | Train Loss: 0.9169 | Train Acc: 65.23% | Val Loss: 0.8962 | Val Acc: 66.06%
     
 
 
@@ -1969,7 +2085,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [09/10] (5.9s) | Train Loss: 0.9007 | Train Acc: 66.21% | Val Loss: 0.8506 | Val Acc: 67.66%
+    Epoch [09/10] (6.0s) | Train Loss: 0.9007 | Train Acc: 66.21% | Val Loss: 0.8506 | Val Acc: 67.66%
     
 
 
@@ -1980,7 +2096,7 @@ history_irnn = train_model_with_grad_clip(model_irnn, train_loader, max_grad=4.0
     Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
 
 
-    Epoch [10/10] (5.7s) | Train Loss: 0.8479 | Train Acc: 68.54% | Val Loss: 0.8492 | Val Acc: 67.78%
+    Epoch [10/10] (5.8s) | Train Loss: 0.8479 | Train Acc: 68.54% | Val Loss: 0.8492 | Val Acc: 67.78%
     -----------------------------------------------------------------
     Training complete!
     
