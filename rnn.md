@@ -601,7 +601,7 @@ print(f"Theoretical initial expectation: -ln(1/5) = ln(5) ≈ {np.log(5):.4f}")
 ```
 
     Loss function: CrossEntropyLoss()
-    Initial loss on the first batch: 1.6175
+    Initial loss on the first batch: 1.6159
     Theoretical initial expectation: -ln(1/5) = ln(5) ≈ 1.6094
     
 
@@ -775,114 +775,6 @@ history = train_model(model, train_loader)
     Epoch 01/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
 
 
-
-    Epoch 01/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [01/10] (7.5s) | Train Loss: 1.5990 | Train Acc: 25.37% | Val Loss: 1.5573 | Val Acc: 33.59%
-    
-
-
-    Epoch 02/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 02/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [02/10] (9.1s) | Train Loss: 1.4780 | Train Acc: 36.13% | Val Loss: 1.4227 | Val Acc: 40.54%
-    
-
-
-    Epoch 03/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 03/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [03/10] (14.1s) | Train Loss: 1.4203 | Train Acc: 40.51% | Val Loss: 1.3684 | Val Acc: 43.57%
-    
-
-
-    Epoch 04/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 04/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [04/10] (14.2s) | Train Loss: 1.3730 | Train Acc: 42.92% | Val Loss: 1.6110 | Val Acc: 30.48%
-    
-
-
-    Epoch 05/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 05/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [05/10] (13.6s) | Train Loss: 1.3048 | Train Acc: 46.24% | Val Loss: 1.2950 | Val Acc: 46.12%
-    
-
-
-    Epoch 06/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 06/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [06/10] (14.0s) | Train Loss: 1.2353 | Train Acc: 50.69% | Val Loss: 1.1463 | Val Acc: 54.95%
-    
-
-
-    Epoch 07/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 07/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [07/10] (13.5s) | Train Loss: 1.3559 | Train Acc: 44.30% | Val Loss: 1.6169 | Val Acc: 21.33%
-    
-
-
-    Epoch 08/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 08/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [08/10] (13.7s) | Train Loss: 1.5909 | Train Acc: 24.74% | Val Loss: 1.5378 | Val Acc: 32.63%
-    
-
-
-    Epoch 09/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 09/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [09/10] (13.8s) | Train Loss: 1.5752 | Train Acc: 27.91% | Val Loss: 1.4560 | Val Acc: 38.06%
-    
-
-
-    Epoch 10/10 [Train]:   0%|          | 0/171 [00:00<?, ?it/s]
-
-
-
-    Epoch 10/10 [Val]:   0%|          | 0/7 [00:00<?, ?it/s]
-
-
-    Epoch [10/10] (13.6s) | Train Loss: 1.4374 | Train Acc: 39.36% | Val Loss: 1.3375 | Val Acc: 44.22%
-    -----------------------------------------------------------------
-    Training complete!
-    
-
 ### **Plotting training graph**
 
 Plotting train and validation loss, train and validation accuracy
@@ -1037,21 +929,47 @@ class RNNClassifierVanishing(nn.Module):
         return hidden_states, out
 ```
 
+Identify the sample with the maximum sequence length (129).
+
+
+```python
+max_idx = int(np.argmax(len_train))
+actual_max_len = int(len_train[max_idx])
+
+# Extract the sample and trim it to its actual sequence length, removing all trailing zero padding.
+# Shape: (1, actual_max_len, 3) - batch_size = 1
+sample_x_max = torch.tensor(
+    X_train[max_idx : max_idx + 1, :actual_max_len, :], 
+    dtype=torch.float32
+)
+sample_y_max = torch.tensor(
+    y_train[max_idx : max_idx + 1], 
+    dtype=torch.long
+)
+
+print("Longest sequence sample:")
+print(f"- Training set index     : {max_idx}")
+print(f"- Category               : {classes[sample_y_max.item()]} (label: {sample_y_max.item()})")
+print(f"- Actual sequence length : {actual_max_len} steps (no zero padding)")
+print(f"- sample_x_max shape     : {sample_x_max.shape}")
+print(f"- sample_y_max shape     : {sample_y_max.shape}")
+```
+
 
 ```python
 sim_model = RNNClassifierVanishing().to(device)
 
 # Forward and backward pass
 sim_model.zero_grad()
-hidden_states, out = sim_model(sample_x.to(device))
-loss = criterion(out, sample_y.to(device))
+hidden_states, out = sim_model(sample_x_max.to(device))
+loss = criterion(out, sample_y_max.to(device))
 loss.backward()
 
 # Extract ||dL / dh_t|| for each time step
 grad_norms = [h_t.grad.norm(2).item() for h_t in hidden_states]
 
 # Summary Statistics
-seq_len = sample_x.size(1)
+seq_len = sample_x_max.size(1)
 decay_ratio = grad_norms[-1] / max(grad_norms[0], 1e-12)
 print("Gradient Norm Statistics across time steps:")
 print(f"- Last step (t={seq_len-1}) : {grad_norms[-1]:.6f}")
@@ -1091,7 +1009,7 @@ plt.show()
 
 
     
-![png](./rnn_files/output_55_1.png)
+![png](./rnn_files/output_57_1.png)
     
 
 
@@ -1253,7 +1171,7 @@ plot_graph_loss_acc(low_lr_history)
 
 
     
-![png](./rnn_files/output_61_0.png)
+![png](./rnn_files/output_63_0.png)
     
 
 
@@ -1271,7 +1189,7 @@ plot_graph_grad(low_lr_history)
 
 
     
-![png](./rnn_files/output_62_1.png)
+![png](./rnn_files/output_64_1.png)
     
 
 
@@ -1411,7 +1329,7 @@ plot_graph_loss_acc(low_lr_explode_history)
 
 
     
-![png](./rnn_files/output_65_0.png)
+![png](./rnn_files/output_67_0.png)
     
 
 
@@ -1429,7 +1347,7 @@ plot_graph_grad(low_lr_explode_history)
 
 
     
-![png](./rnn_files/output_66_1.png)
+![png](./rnn_files/output_68_1.png)
     
 
 
@@ -1698,7 +1616,7 @@ plot_graph_loss_acc(history_grad_clip)
 
 
     
-![png](./rnn_files/output_71_0.png)
+![png](./rnn_files/output_73_0.png)
     
 
 
@@ -1716,7 +1634,7 @@ plot_graph_grad(history_grad_clip)
 
 
     
-![png](./rnn_files/output_72_1.png)
+![png](./rnn_files/output_74_1.png)
     
 
 
@@ -1805,8 +1723,8 @@ sim_lstm = LSTMClassifier().to(device)
 
 # Forward and backward pass
 sim_lstm.zero_grad()
-lstm_h_states, lstm_c_states, lstm_out = sim_lstm(sample_x.to(device))
-loss_lstm = criterion(lstm_out, sample_y.to(device))
+lstm_h_states, lstm_c_states, lstm_out = sim_lstm(sample_x_max.to(device))
+loss_lstm = criterion(lstm_out, sample_y_max.to(device))
 loss_lstm.backward()
 
 # Extract gradient norms: ||dL / dh_t|| and ||dL / dc_t||
@@ -1820,7 +1738,7 @@ lstm_c_grad_norms = [
 ]
 
 # Summary statistics
-seq_len = sample_x.size(1)
+seq_len = sample_x_max.size(1)
 print("Gradient Norm Comparison (First Step t=0 vs Last Step t=129):")
 print("-" * 75)
 print(f"Vanilla RNN (h_t)      : t=129: {grad_norms[-1]:.6f} | t=0: {grad_norms[0]:.6e}")
@@ -1869,7 +1787,7 @@ plt.show()
 
 
     
-![png](./rnn_files/output_76_1.png)
+![png](./rnn_files/output_78_1.png)
     
 
 
@@ -2074,7 +1992,7 @@ plot_graph_loss_acc(history_irnn)
 
 
     
-![png](./rnn_files/output_80_0.png)
+![png](./rnn_files/output_82_0.png)
     
 
 
@@ -2092,6 +2010,6 @@ plot_graph_grad(history_irnn)
 
 
     
-![png](./rnn_files/output_81_1.png)
+![png](./rnn_files/output_83_1.png)
     
 
